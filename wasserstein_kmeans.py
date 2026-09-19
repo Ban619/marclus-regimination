@@ -515,6 +515,8 @@ def gaussian_kernel(x: np.ndarray, y: np.ndarray, sigma: float = 0.1) -> float:
     """
     if sigma <= 0:
         raise ValueError("sigma must be positive")
+    if np.shape(x) != np.shape(y):
+        raise ValueError("kernel inputs must have the same shape")
 
     return np.exp(-np.sum((x - y) ** 2) / (2 * sigma ** 2))
 
@@ -546,6 +548,8 @@ def compute_mmd_biased(
 
     if len(x) == 0 or len(y) == 0:
         raise ValueError("samples must not be empty")
+    if x.ndim != 2 or y.ndim != 2 or x.shape[1] != y.shape[1]:
+        raise ValueError("samples must have the same number of features")
 
     n, m = len(x), len(y)
 

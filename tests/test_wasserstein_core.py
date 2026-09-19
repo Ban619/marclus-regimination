@@ -102,6 +102,18 @@ def test_fast_mmd_rejects_incompatible_samples():
         compute_mmd_fast(np.ones((2, 1)), np.ones((2, 2)))
 
 
+def test_reference_mmd_rejects_incompatible_samples():
+    with pytest.raises(ValueError, match="same number of features"):
+        compute_mmd_biased(np.ones((2, 1)), np.ones((2, 2)))
+
+
+def test_gaussian_kernel_rejects_different_shapes():
+    with pytest.raises(ValueError, match="same shape"):
+        from wasserstein_kmeans import gaussian_kernel
+
+        gaussian_kernel(np.ones(1), np.ones(2))
+
+
 def test_mmd_metrics_reject_non_positive_bandwidth():
     with pytest.raises(ValueError, match="sigma"):
         compute_mmd_fast(np.array([0.0]), np.array([1.0]), sigma=0)
