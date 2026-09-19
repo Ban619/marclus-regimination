@@ -1,0 +1,60 @@
+import numpy as np
+
+from wasserstein_kmeans import (
+    compute_log_returns,
+    create_sliding_windows,
+    wasserstein_barycenter_1d,
+    wasserstein_distance_1d,
+    compute_mmd_biased,
+    compute_mmd_fast,
+)
+
+
+def test_compute_log_returns_uses_consecutive_prices():
+    prices = np.array([100.0, 110.0, 99.0])
+
+    result = compute_log_returns(prices)
+
+    np.testing.assert_allclose(result, np.log([1.1, 0.9]))
+
+
+def test_create_sliding_windows_keeps_expected_overlap():
+    returns = np.arange(7, dtype=float)
+
+    windows = create_sliding_windows(returns, h1=4, h2=2)
+
+    assert len(windows) == 2
+    np.testing.assert_array_equal(windows[0], [0.0, 1.0, 2.0, 3.0])
+    np.testing.assert_array_equal(windows[1], [2.0, 3.0, 4.0, 5.0])
+
+
+def test_wasserstein_distance_is_zero_for_identical_distributions():
+    distribution = np.array([3.0, 1.0, 2.0])
+
+    assert wasserstein_distance_1d(distribution, distribution, p=1) == 0.0
+
+
+def test_wasserstein_distance_supports_different_sample_sizes():
+    left = np.array([0.0, 2.0])
+    right = np.array([0.0, 1.0, 2.0])
+
+    assert wasserstein_distance_1d(left, right, p=1) == 0.0
+
+
+def test_barycenter_uses_median_for_first_order_distance():
+    distributions = [
+        np.array([0.0, 2.0]),
+        np.array([1.0, 3.0]),
+        np.array([2.0, 4.0]),
+    ]
+
+    result = wasserstein_barycenter_1d(distributions, p=1)
+
+    np.testing.assert_array_equal(result, [2.0, 3.0])
+
+
+def test_mmd_implementations_agree_for_one_dimensional_samples():
+    left = np.array([-1.0, 0.0, 1.0])
+    right = np.array([0.0, 1.0, 2.0])
+
+    assert compute_mmd_fast(left, right) == compute_mmd_biased(left, right)

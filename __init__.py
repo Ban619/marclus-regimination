@@ -11,24 +11,44 @@ Main Components:
 - visualization: Plotting functions
 """
 
-from .wasserstein_kmeans import (
-    WassersteinKMeans,
-    MomentKMeans,
-    compute_log_returns,
-    create_sliding_windows,
-    wasserstein_distance_1d,
-    wasserstein_barycenter_1d,
-    compute_mmd_fast,
-    compute_self_similarity
-)
+try:
+    from .wasserstein_kmeans import (
+        WassersteinKMeans,
+        MomentKMeans,
+        compute_log_returns,
+        create_sliding_windows,
+        wasserstein_distance_1d,
+        wasserstein_barycenter_1d,
+        compute_mmd_fast,
+        compute_self_similarity
+    )
 
-from .synthetic_data import (
-    GBMParams,
-    MertonParams,
-    RegimeSwitchingParams,
-    generate_regime_switching_gbm,
-    generate_regime_switching_merton
-)
+    from .synthetic_data import (
+        GBMParams,
+        MertonParams,
+        RegimeSwitchingParams,
+        generate_regime_switching_gbm,
+        generate_regime_switching_merton
+    )
+except ImportError:
+    from wasserstein_kmeans import (
+        WassersteinKMeans,
+        MomentKMeans,
+        compute_log_returns,
+        create_sliding_windows,
+        wasserstein_distance_1d,
+        wasserstein_barycenter_1d,
+        compute_mmd_fast,
+        compute_self_similarity
+    )
+
+    from synthetic_data import (
+        GBMParams,
+        MertonParams,
+        RegimeSwitchingParams,
+        generate_regime_switching_gbm,
+        generate_regime_switching_merton
+    )
 
 __version__ = "1.0.0"
 __author__ = "Based on Horvath, Issa, Muguruza (2021)"
