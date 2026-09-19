@@ -575,8 +575,18 @@ def compute_mmd_fast(
     Returns:
         Biased MMD estimate
     """
-    x = x.reshape(-1, 1)
-    y = y.reshape(-1, 1)
+    x = np.asarray(x)
+    y = np.asarray(y)
+    if x.ndim == 1:
+        x = x.reshape(-1, 1)
+    if y.ndim == 1:
+        y = y.reshape(-1, 1)
+    if x.ndim != 2 or y.ndim != 2:
+        raise ValueError("samples must be one- or two-dimensional arrays")
+    if x.shape[1] != y.shape[1]:
+        raise ValueError("samples must have the same number of features")
+    if len(x) == 0 or len(y) == 0:
+        raise ValueError("samples must not be empty")
 
     # Compute pairwise squared distances
     xx_dist = np.sum((x[:, np.newaxis] - x) ** 2, axis=2)

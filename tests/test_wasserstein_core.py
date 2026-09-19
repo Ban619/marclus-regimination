@@ -80,6 +80,20 @@ def test_mmd_implementations_agree_for_one_dimensional_samples():
     assert compute_mmd_fast(left, right) == compute_mmd_biased(left, right)
 
 
+def test_fast_mmd_preserves_features_for_matrix_samples():
+    left = np.array([[0.0, 0.0], [1.0, 1.0]])
+    right = np.array([[0.0, 1.0], [1.0, 2.0]])
+
+    result = compute_mmd_fast(left, right)
+
+    np.testing.assert_allclose(result, compute_mmd_biased(left, right))
+
+
+def test_fast_mmd_rejects_incompatible_samples():
+    with pytest.raises(ValueError, match="same number of features"):
+        compute_mmd_fast(np.ones((2, 1)), np.ones((2, 2)))
+
+
 def test_wasserstein_kmeans_rejects_impossible_cluster_count():
     model = WassersteinKMeans(n_clusters=3, n_init=1)
 
