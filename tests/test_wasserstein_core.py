@@ -10,6 +10,7 @@ from wasserstein_kmeans import (
     compute_mmd_fast,
     compute_self_similarity,
     compute_between_cluster_mmd,
+    order_clusters_by_variance,
     MomentKMeans,
     WassersteinKMeans,
 )
@@ -165,3 +166,15 @@ def test_wasserstein_kmeans_predict_requires_fit():
 
     with pytest.raises(ValueError, match="fitted"):
         model.predict([np.array([0.0])])
+
+
+def test_cluster_ordering_rejects_inconsistent_lengths():
+    with pytest.raises(ValueError, match="same length"):
+        order_clusters_by_variance([np.array([0.0])], np.array([0, 1]), [np.array([0.0])])
+
+
+def test_cluster_ordering_rejects_unknown_labels():
+    with pytest.raises(ValueError, match="existing centroid"):
+        order_clusters_by_variance(
+            [np.array([0.0])], np.array([2]), [np.array([0.0]), np.array([1.0])]
+        )

@@ -717,6 +717,13 @@ def order_clusters_by_variance(
     Returns:
         Reordered labels and centroids
     """
+    if len(distributions) != len(labels):
+        raise ValueError("distributions and labels must have the same length")
+    if len(centroids) == 0:
+        raise ValueError("centroids must not be empty")
+    if np.any(labels < 0) or np.any(labels >= len(centroids)):
+        raise ValueError("labels must reference an existing centroid")
+
     cluster_variances = []
 
     for k in range(len(centroids)):
