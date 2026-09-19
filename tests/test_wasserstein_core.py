@@ -63,6 +63,11 @@ def test_wasserstein_distance_rejects_empty_distributions():
         wasserstein_distance_1d(np.array([]), np.array([1.0]))
 
 
+def test_wasserstein_distance_rejects_non_finite_atoms():
+    with pytest.raises(ValueError, match="finite"):
+        wasserstein_distance_1d(np.array([0.0, np.inf]), np.array([0.0, 1.0]))
+
+
 def test_wasserstein_barycenter_rejects_invalid_order():
     with pytest.raises(ValueError, match="positive"):
         wasserstein_barycenter_1d([np.array([0.0])], p=0)
@@ -85,6 +90,11 @@ def test_barycenter_uses_median_for_first_order_distance():
     result = wasserstein_barycenter_1d(distributions, p=1)
 
     np.testing.assert_array_equal(result, [2.0, 3.0])
+
+
+def test_barycenter_rejects_empty_distributions():
+    with pytest.raises(ValueError, match="empty"):
+        wasserstein_barycenter_1d([np.array([1.0]), np.array([])])
 
 
 def test_mmd_implementations_agree_for_one_dimensional_samples():

@@ -102,8 +102,14 @@ def wasserstein_distance_1d(mu: np.ndarray, nu: np.ndarray, p: int = 1) -> float
     """
     if p <= 0:
         raise ValueError("p must be positive")
+    mu = np.asarray(mu)
+    nu = np.asarray(nu)
+    if mu.ndim != 1 or nu.ndim != 1:
+        raise ValueError("distributions must be one-dimensional")
     if len(mu) == 0 or len(nu) == 0:
         raise ValueError("distributions must not be empty")
+    if not np.all(np.isfinite(mu)) or not np.all(np.isfinite(nu)):
+        raise ValueError("distributions must contain only finite values")
 
     # Sort atoms (order statistics)
     alpha = np.sort(mu)
@@ -147,8 +153,16 @@ def wasserstein_barycenter_1d(distributions: List[np.ndarray], p: int = 1) -> np
     if len(distributions) == 0:
         raise ValueError("Cannot compute barycenter of empty set")
 
+    normalized = [np.asarray(d) for d in distributions]
+    if any(d.ndim != 1 for d in normalized):
+        raise ValueError("distributions must be one-dimensional")
+    if any(len(d) == 0 for d in normalized):
+        raise ValueError("distributions must not be empty")
+    if any(not np.all(np.isfinite(d)) for d in normalized):
+        raise ValueError("distributions must contain only finite values")
+
     # Sort all distributions
-    sorted_dists = [np.sort(d) for d in distributions]
+    sorted_dists = [np.sort(d) for d in normalized]
 
     # Resample to common size if needed
     n_atoms = max(len(d) for d in sorted_dists)
