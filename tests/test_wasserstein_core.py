@@ -10,6 +10,7 @@ from wasserstein_kmeans import (
     compute_mmd_fast,
     compute_self_similarity,
     compute_between_cluster_mmd,
+    gaussian_kernel,
     order_clusters_by_variance,
     MomentKMeans,
     WassersteinKMeans,
@@ -109,8 +110,6 @@ def test_reference_mmd_rejects_incompatible_samples():
 
 def test_gaussian_kernel_rejects_different_shapes():
     with pytest.raises(ValueError, match="same shape"):
-        from wasserstein_kmeans import gaussian_kernel
-
         gaussian_kernel(np.ones(1), np.ones(2))
 
 

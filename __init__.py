@@ -19,8 +19,12 @@ try:
         create_sliding_windows,
         wasserstein_distance_1d,
         wasserstein_barycenter_1d,
+        gaussian_kernel,
+        compute_mmd_biased,
         compute_mmd_fast,
-        compute_self_similarity
+        compute_self_similarity,
+        compute_between_cluster_mmd,
+        order_clusters_by_variance
     )
 
     from .synthetic_data import (
@@ -38,8 +42,12 @@ except ImportError:
         create_sliding_windows,
         wasserstein_distance_1d,
         wasserstein_barycenter_1d,
+        gaussian_kernel,
+        compute_mmd_biased,
         compute_mmd_fast,
-        compute_self_similarity
+        compute_self_similarity,
+        compute_between_cluster_mmd,
+        order_clusters_by_variance
     )
 
     from synthetic_data import (
