@@ -89,6 +89,17 @@ def test_mmd_implementations_agree_for_one_dimensional_samples():
     assert compute_mmd_fast(left, right) == compute_mmd_biased(left, right)
 
 
+def test_mmd_metrics_accept_list_inputs():
+    left = [-1.0, 0.0, 1.0]
+    right = [0.0, 1.0, 2.0]
+
+    np.testing.assert_allclose(
+        compute_mmd_biased(left, right),
+        compute_mmd_fast(left, right),
+    )
+    assert gaussian_kernel(left, left) == 1.0
+
+
 def test_fast_mmd_preserves_features_for_matrix_samples():
     left = np.array([[0.0, 0.0], [1.0, 1.0]])
     right = np.array([[0.0, 1.0], [1.0, 2.0]])

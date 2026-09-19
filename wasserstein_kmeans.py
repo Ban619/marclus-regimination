@@ -515,6 +515,8 @@ def gaussian_kernel(x: np.ndarray, y: np.ndarray, sigma: float = 0.1) -> float:
     """
     if sigma <= 0:
         raise ValueError("sigma must be positive")
+    x = np.asarray(x)
+    y = np.asarray(y)
     if np.shape(x) != np.shape(y):
         raise ValueError("kernel inputs must have the same shape")
 
@@ -543,6 +545,8 @@ def compute_mmd_biased(
     if sigma <= 0:
         raise ValueError("sigma must be positive")
 
+    x = np.asarray(x)
+    y = np.asarray(y)
     x = np.atleast_2d(x).T if x.ndim == 1 else x
     y = np.atleast_2d(y).T if y.ndim == 1 else y
 
