@@ -89,3 +89,8 @@ def test_accuracy_scores_are_perfect_for_matching_window_labels():
     total, regime_on, regime_off = compute_accuracy_scores(predicted, true_labels, 2, 2)
 
     assert (total, regime_on, regime_off) == (1.0, 1.0, 1.0)
+
+
+def test_accuracy_scores_reject_mismatched_window_labels():
+    with np.testing.assert_raises_regex(ValueError, "does not match"):
+        compute_accuracy_scores(np.array([0]), np.array([0, 1, 0, 1]), 2, 2)

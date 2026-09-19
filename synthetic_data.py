@@ -357,8 +357,18 @@ def compute_accuracy_scores(
     Returns:
         Tuple of (total_accuracy, regime_on_accuracy, regime_off_accuracy)
     """
+    if h1 <= 0:
+        raise ValueError("h1 must be positive")
+    if h2 <= 0:
+        raise ValueError("h2 must be positive")
+    if len(predicted_labels) == 0:
+        raise ValueError("predicted_labels must not be empty")
+
     n_returns = len(true_regime_labels)
     n_windows = len(predicted_labels)
+    expected_windows = max(0, (n_returns - h1) // h2 + 1)
+    if n_windows != expected_windows:
+        raise ValueError("predicted_labels length does not match the window parameters")
 
     # Map each return to its window memberships
     return_predictions = []
