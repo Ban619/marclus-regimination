@@ -40,6 +40,12 @@ def compute_log_returns(prices: np.ndarray) -> np.ndarray:
     Returns:
         Array of log returns (length = len(prices) - 1)
     """
+    prices = np.asarray(prices)
+    if prices.ndim != 1:
+        raise ValueError("prices must be a one-dimensional array")
+    if np.any(prices <= 0):
+        raise ValueError("prices must contain only positive values")
+
     return np.diff(np.log(prices))
 
 
@@ -58,6 +64,10 @@ def create_sliding_windows(returns: np.ndarray, h1: int, h2: int) -> List[np.nda
     Returns:
         List of return windows (each is an empirical distribution)
     """
+    if h1 <= 0:
+        raise ValueError("h1 must be positive")
+    if h2 < 0:
+        raise ValueError("h2 must not be negative")
     if h2 >= h1:
         raise ValueError("h2 must be less than h1")
 
@@ -88,6 +98,11 @@ def wasserstein_distance_1d(mu: np.ndarray, nu: np.ndarray, p: int = 1) -> float
     Returns:
         p-Wasserstein distance
     """
+    if p <= 0:
+        raise ValueError("p must be positive")
+    if len(mu) == 0 or len(nu) == 0:
+        raise ValueError("distributions must not be empty")
+
     # Sort atoms (order statistics)
     alpha = np.sort(mu)
     beta = np.sort(nu)

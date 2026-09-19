@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 from wasserstein_kmeans import (
     compute_log_returns,
@@ -18,6 +19,11 @@ def test_compute_log_returns_uses_consecutive_prices():
     np.testing.assert_allclose(result, np.log([1.1, 0.9]))
 
 
+def test_compute_log_returns_rejects_non_positive_prices():
+    with pytest.raises(ValueError, match="positive"):
+        compute_log_returns(np.array([100.0, 0.0, 101.0]))
+
+
 def test_create_sliding_windows_keeps_expected_overlap():
     returns = np.arange(7, dtype=float)
 
@@ -28,10 +34,22 @@ def test_create_sliding_windows_keeps_expected_overlap():
     np.testing.assert_array_equal(windows[1], [2.0, 3.0, 4.0, 5.0])
 
 
+def test_create_sliding_windows_rejects_invalid_window_parameters():
+    with pytest.raises(ValueError, match="h1"):
+        create_sliding_windows(np.arange(4, dtype=float), h1=0, h2=1)
+    with pytest.raises(ValueError, match="negative"):
+        create_sliding_windows(np.arange(4, dtype=float), h1=2, h2=-1)
+
+
 def test_wasserstein_distance_is_zero_for_identical_distributions():
     distribution = np.array([3.0, 1.0, 2.0])
 
     assert wasserstein_distance_1d(distribution, distribution, p=1) == 0.0
+
+
+def test_wasserstein_distance_rejects_empty_distributions():
+    with pytest.raises(ValueError, match="empty"):
+        wasserstein_distance_1d(np.array([]), np.array([1.0]))
 
 
 def test_wasserstein_distance_supports_different_sample_sizes():
