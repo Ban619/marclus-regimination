@@ -108,6 +108,29 @@ def test_between_cluster_mmd_rejects_empty_clusters():
         compute_between_cluster_mmd([], [np.array([0.0])])
 
 
+def test_self_similarity_is_reproducible_with_a_seed():
+    distributions = [
+        np.array([-1.0, 0.0, 1.0]),
+        np.array([-0.5, 0.0, 0.5]),
+        np.array([0.0, 0.5, 1.0]),
+    ]
+
+    first = compute_self_similarity(distributions, n_samples=4, random_state=11)
+    second = compute_self_similarity(distributions, n_samples=4, random_state=11)
+
+    assert first == second
+
+
+def test_between_cluster_mmd_returns_requested_number_of_scores():
+    cluster1 = [np.array([0.0, 1.0]), np.array([0.0, 2.0])]
+    cluster2 = [np.array([2.0, 3.0]), np.array([3.0, 4.0])]
+
+    scores = compute_between_cluster_mmd(cluster1, cluster2, n_samples=7, random_state=11)
+
+    assert scores.shape == (7,)
+    assert np.all(scores >= 0)
+
+
 def test_wasserstein_kmeans_rejects_impossible_cluster_count():
     model = WassersteinKMeans(n_clusters=3, n_init=1)
 
