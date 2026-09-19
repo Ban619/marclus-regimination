@@ -40,8 +40,8 @@ WK-means significantly outperforms on non-Gaussian data (Merton), demonstrating 
 ## Installation
 
 ```bash
-git clone https://github.com/yourusername/regime_clustering.git
-cd regime_clustering
+git clone https://github.com/Ban619/marclus-regimination.git
+cd marclus-regimination/clusmar-regimes
 pip install -r requirements.txt
 ```
 
@@ -86,10 +86,19 @@ python view_figures.py
 python view_figures.py --pages
 ```
 
+### Run Tests
+
+Install the development dependencies and run the regression suite:
+
+```bash
+pip install -r requirements-dev.txt
+python -m pytest -q
+```
+
 ## Project Structure
 
 ```
-regime_clustering/
+clusmar-regimes/
 ├── wasserstein_kmeans.py   # Core algorithms (WK-means, MK-means, MMD)
 ├── synthetic_data.py       # GBM and Merton data generators
 ├── visualization.py        # Plotting functions and animations
