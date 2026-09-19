@@ -511,6 +511,9 @@ def gaussian_kernel(x: np.ndarray, y: np.ndarray, sigma: float = 0.1) -> float:
     Returns:
         Kernel value
     """
+    if sigma <= 0:
+        raise ValueError("sigma must be positive")
+
     return np.exp(-np.sum((x - y) ** 2) / (2 * sigma ** 2))
 
 
@@ -533,8 +536,14 @@ def compute_mmd_biased(
     Returns:
         Biased MMD estimate
     """
+    if sigma <= 0:
+        raise ValueError("sigma must be positive")
+
     x = np.atleast_2d(x).T if x.ndim == 1 else x
     y = np.atleast_2d(y).T if y.ndim == 1 else y
+
+    if len(x) == 0 or len(y) == 0:
+        raise ValueError("samples must not be empty")
 
     n, m = len(x), len(y)
 
@@ -575,6 +584,9 @@ def compute_mmd_fast(
     Returns:
         Biased MMD estimate
     """
+    if sigma <= 0:
+        raise ValueError("sigma must be positive")
+
     x = np.asarray(x)
     y = np.asarray(y)
     if x.ndim == 1:
@@ -626,6 +638,11 @@ def compute_self_similarity(
     Returns:
         Self-similarity score (lower is better - more similar)
     """
+    if sigma <= 0:
+        raise ValueError("sigma must be positive")
+    if n_samples < 1:
+        raise ValueError("n_samples must be positive")
+
     if len(cluster_distributions) < 2:
         return 0.0
 
@@ -666,6 +683,13 @@ def compute_between_cluster_mmd(
     Returns:
         Array of MMD scores
     """
+    if sigma <= 0:
+        raise ValueError("sigma must be positive")
+    if n_samples < 1:
+        raise ValueError("n_samples must be positive")
+    if len(cluster1) == 0 or len(cluster2) == 0:
+        raise ValueError("clusters must not be empty")
+
     rng = np.random.default_rng(random_state)
 
     mmd_scores = []

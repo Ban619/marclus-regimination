@@ -8,6 +8,8 @@ from wasserstein_kmeans import (
     wasserstein_distance_1d,
     compute_mmd_biased,
     compute_mmd_fast,
+    compute_self_similarity,
+    compute_between_cluster_mmd,
     MomentKMeans,
     WassersteinKMeans,
 )
@@ -92,6 +94,18 @@ def test_fast_mmd_preserves_features_for_matrix_samples():
 def test_fast_mmd_rejects_incompatible_samples():
     with pytest.raises(ValueError, match="same number of features"):
         compute_mmd_fast(np.ones((2, 1)), np.ones((2, 2)))
+
+
+def test_mmd_metrics_reject_non_positive_bandwidth():
+    with pytest.raises(ValueError, match="sigma"):
+        compute_mmd_fast(np.array([0.0]), np.array([1.0]), sigma=0)
+    with pytest.raises(ValueError, match="sigma"):
+        compute_self_similarity([np.array([0.0]), np.array([1.0])], sigma=-1)
+
+
+def test_between_cluster_mmd_rejects_empty_clusters():
+    with pytest.raises(ValueError, match="clusters"):
+        compute_between_cluster_mmd([], [np.array([0.0])])
 
 
 def test_wasserstein_kmeans_rejects_impossible_cluster_count():
