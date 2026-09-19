@@ -30,6 +30,11 @@ def test_compute_log_returns_rejects_non_positive_prices():
         compute_log_returns(np.array([100.0, 0.0, 101.0]))
 
 
+def test_compute_log_returns_rejects_non_finite_prices():
+    with pytest.raises(ValueError, match="finite"):
+        compute_log_returns(np.array([100.0, np.nan, 101.0]))
+
+
 def test_create_sliding_windows_keeps_expected_overlap():
     returns = np.arange(7, dtype=float)
 

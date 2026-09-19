@@ -43,6 +43,8 @@ def compute_log_returns(prices: np.ndarray) -> np.ndarray:
     prices = np.asarray(prices)
     if prices.ndim != 1:
         raise ValueError("prices must be a one-dimensional array")
+    if not np.all(np.isfinite(prices)):
+        raise ValueError("prices must contain only finite values")
     if np.any(prices <= 0):
         raise ValueError("prices must contain only positive values")
 
