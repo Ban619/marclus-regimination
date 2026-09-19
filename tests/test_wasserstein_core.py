@@ -143,3 +143,25 @@ def test_moment_kmeans_rejects_empty_input():
 
     with pytest.raises(ValueError, match="empty"):
         model.fit([])
+
+
+def test_wasserstein_kmeans_is_reproducible_with_a_seed():
+    distributions = [
+        np.array([-2.0, -1.0, 0.0]),
+        np.array([-1.5, -0.5, 0.5]),
+        np.array([4.0, 5.0, 6.0]),
+        np.array([4.5, 5.5, 6.5]),
+    ]
+
+    first = WassersteinKMeans(n_clusters=2, n_init=3, random_state=19).fit(distributions)
+    second = WassersteinKMeans(n_clusters=2, n_init=3, random_state=19).fit(distributions)
+
+    np.testing.assert_array_equal(first.labels_, second.labels_)
+    assert first.inertia_ == second.inertia_
+
+
+def test_wasserstein_kmeans_predict_requires_fit():
+    model = WassersteinKMeans(n_clusters=2)
+
+    with pytest.raises(ValueError, match="fitted"):
+        model.predict([np.array([0.0])])
