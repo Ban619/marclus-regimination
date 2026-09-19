@@ -21,6 +21,16 @@ def test_simulate_gbm_is_reproducible_with_a_seed():
     np.testing.assert_array_equal(first_times, second_times)
 
 
+def test_simulate_gbm_rejects_invalid_time_parameters():
+    with np.testing.assert_raises_regex(ValueError, "positive"):
+        simulate_gbm(100.0, 0.05, 0.2, 1.0, 0)
+
+
+def test_simulate_merton_rejects_invalid_jump_parameters():
+    with np.testing.assert_raises_regex(ValueError, "lambda_"):
+        simulate_merton_jump_diffusion(100.0, 0.05, 0.2, -1.0, 0.0, 0.1, 1.0, 12)
+
+
 def test_simulated_price_paths_have_expected_lengths_and_start_value():
     prices, times = simulate_merton_jump_diffusion(
         100.0, 0.05, 0.2, 2.0, -0.02, 0.05, 1.0, 12, random_state=7

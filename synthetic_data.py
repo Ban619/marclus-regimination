@@ -78,6 +78,13 @@ def simulate_gbm(
     Returns:
         Tuple of (prices, times)
     """
+    if S0 <= 0:
+        raise ValueError("S0 must be positive")
+    if T <= 0:
+        raise ValueError("T must be positive")
+    if n_steps < 1:
+        raise ValueError("n_steps must be positive")
+
     rng = np.random.default_rng(random_state)
     dt = T / n_steps
 
@@ -135,6 +142,17 @@ def simulate_merton_jump_diffusion(
     Returns:
         Tuple of (prices, times)
     """
+    if S0 <= 0:
+        raise ValueError("S0 must be positive")
+    if T <= 0:
+        raise ValueError("T must be positive")
+    if n_steps < 1:
+        raise ValueError("n_steps must be positive")
+    if lambda_ < 0:
+        raise ValueError("lambda_ must not be negative")
+    if delta < 0:
+        raise ValueError("delta must not be negative")
+
     rng = np.random.default_rng(random_state)
     dt = T / n_steps
 
