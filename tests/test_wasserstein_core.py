@@ -8,6 +8,8 @@ from wasserstein_kmeans import (
     wasserstein_distance_1d,
     compute_mmd_biased,
     compute_mmd_fast,
+    MomentKMeans,
+    WassersteinKMeans,
 )
 
 
@@ -76,3 +78,17 @@ def test_mmd_implementations_agree_for_one_dimensional_samples():
     right = np.array([0.0, 1.0, 2.0])
 
     assert compute_mmd_fast(left, right) == compute_mmd_biased(left, right)
+
+
+def test_wasserstein_kmeans_rejects_impossible_cluster_count():
+    model = WassersteinKMeans(n_clusters=3, n_init=1)
+
+    with pytest.raises(ValueError, match="exceed"):
+        model.fit([np.array([0.0]), np.array([1.0])])
+
+
+def test_moment_kmeans_rejects_empty_input():
+    model = MomentKMeans(n_clusters=2, n_init=1)
+
+    with pytest.raises(ValueError, match="empty"):
+        model.fit([])

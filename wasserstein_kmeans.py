@@ -202,6 +202,17 @@ class WassersteinKMeans:
         self.n_init = n_init
         self.random_state = random_state
 
+        if n_clusters < 1:
+            raise ValueError("n_clusters must be positive")
+        if p < 1:
+            raise ValueError("p must be positive")
+        if max_iter < 1:
+            raise ValueError("max_iter must be positive")
+        if tol < 0:
+            raise ValueError("tol must not be negative")
+        if n_init < 1:
+            raise ValueError("n_init must be positive")
+
         self.centroids_: Optional[List[np.ndarray]] = None
         self.labels_: Optional[np.ndarray] = None
         self.n_iter_: int = 0
@@ -294,6 +305,11 @@ class WassersteinKMeans:
         Returns:
             self
         """
+        if len(distributions) == 0:
+            raise ValueError("distributions must not be empty")
+        if self.n_clusters > len(distributions):
+            raise ValueError("n_clusters cannot exceed the number of distributions")
+
         rng = np.random.default_rng(self.random_state)
 
         best_inertia = np.inf
@@ -390,6 +406,17 @@ class MomentKMeans:
         self.n_init = n_init
         self.random_state = random_state
 
+        if n_clusters < 1:
+            raise ValueError("n_clusters must be positive")
+        if n_moments < 1:
+            raise ValueError("n_moments must be positive")
+        if max_iter < 1:
+            raise ValueError("max_iter must be positive")
+        if tol < 0:
+            raise ValueError("tol must not be negative")
+        if n_init < 1:
+            raise ValueError("n_init must be positive")
+
         self.centroids_: Optional[np.ndarray] = None
         self.labels_: Optional[np.ndarray] = None
         self.scaler_mean_: Optional[np.ndarray] = None
@@ -427,6 +454,11 @@ class MomentKMeans:
     def fit(self, distributions: List[np.ndarray]) -> 'MomentKMeans':
         """Fit MK-means to distributions."""
         from sklearn.cluster import KMeans
+
+        if len(distributions) == 0:
+            raise ValueError("distributions must not be empty")
+        if self.n_clusters > len(distributions):
+            raise ValueError("n_clusters cannot exceed the number of distributions")
 
         # Convert to moment representation
         X = self._distributions_to_moments(distributions)
