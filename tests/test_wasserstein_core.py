@@ -57,6 +57,11 @@ def test_wasserstein_distance_rejects_empty_distributions():
         wasserstein_distance_1d(np.array([]), np.array([1.0]))
 
 
+def test_wasserstein_barycenter_rejects_invalid_order():
+    with pytest.raises(ValueError, match="positive"):
+        wasserstein_barycenter_1d([np.array([0.0])], p=0)
+
+
 def test_wasserstein_distance_supports_different_sample_sizes():
     left = np.array([0.0, 2.0])
     right = np.array([0.0, 1.0, 2.0])

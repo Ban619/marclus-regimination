@@ -140,6 +140,8 @@ def wasserstein_barycenter_1d(distributions: List[np.ndarray], p: int = 1) -> np
     Returns:
         Barycenter distribution (sorted atoms)
     """
+    if p <= 0:
+        raise ValueError("p must be positive")
     if len(distributions) == 0:
         raise ValueError("Cannot compute barycenter of empty set")
 
