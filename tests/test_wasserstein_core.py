@@ -52,6 +52,13 @@ def test_create_sliding_windows_rejects_invalid_window_parameters():
         create_sliding_windows(np.arange(4, dtype=float), h1=2, h2=-1)
 
 
+def test_create_sliding_windows_rejects_malformed_returns():
+    with pytest.raises(ValueError, match="one-dimensional"):
+        create_sliding_windows(np.ones((2, 2)), h1=2, h2=1)
+    with pytest.raises(ValueError, match="finite"):
+        create_sliding_windows(np.array([0.0, np.nan]), h1=2, h2=1)
+
+
 def test_wasserstein_distance_is_zero_for_identical_distributions():
     distribution = np.array([3.0, 1.0, 2.0])
 

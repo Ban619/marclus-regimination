@@ -73,6 +73,12 @@ def create_sliding_windows(returns: np.ndarray, h1: int, h2: int) -> List[np.nda
     if h2 >= h1:
         raise ValueError("h2 must be less than h1")
 
+    returns = np.asarray(returns)
+    if returns.ndim != 1:
+        raise ValueError("returns must be a one-dimensional array")
+    if not np.all(np.isfinite(returns)):
+        raise ValueError("returns must contain only finite values")
+
     windows = []
     i = 0
     while i + h1 <= len(returns):
