@@ -569,6 +569,8 @@ def compute_mmd_biased(
 
     x = np.asarray(x)
     y = np.asarray(y)
+    if x.ndim not in (1, 2) or y.ndim not in (1, 2):
+        raise ValueError("samples must be one- or two-dimensional arrays")
     x = np.atleast_2d(x).T if x.ndim == 1 else x
     y = np.atleast_2d(y).T if y.ndim == 1 else y
 

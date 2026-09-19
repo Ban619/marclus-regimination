@@ -141,6 +141,11 @@ def test_reference_mmd_rejects_incompatible_samples():
         compute_mmd_biased(np.ones((2, 1)), np.ones((2, 2)))
 
 
+def test_reference_mmd_rejects_scalar_samples():
+    with pytest.raises(ValueError, match="one- or two-dimensional"):
+        compute_mmd_biased(1.0, np.array([1.0]))
+
+
 def test_gaussian_kernel_rejects_different_shapes():
     with pytest.raises(ValueError, match="same shape"):
         gaussian_kernel(np.ones(1), np.ones(2))
