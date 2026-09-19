@@ -185,6 +185,28 @@ def test_wasserstein_kmeans_predict_requires_fit():
         model.predict([np.array([0.0])])
 
 
+def test_moment_kmeans_is_reproducible_with_a_seed():
+    distributions = [
+        np.array([-2.0, -1.0, 0.0]),
+        np.array([-1.5, -0.5, 0.5]),
+        np.array([4.0, 5.0, 6.0]),
+        np.array([4.5, 5.5, 6.5]),
+    ]
+
+    first = MomentKMeans(n_clusters=2, n_init=3, random_state=19).fit(distributions)
+    second = MomentKMeans(n_clusters=2, n_init=3, random_state=19).fit(distributions)
+
+    np.testing.assert_array_equal(first.labels_, second.labels_)
+    np.testing.assert_allclose(first.centroids_, second.centroids_)
+
+
+def test_moment_kmeans_predict_requires_fit():
+    model = MomentKMeans(n_clusters=2)
+
+    with pytest.raises(ValueError, match="fitted"):
+        model.predict([np.array([0.0])])
+
+
 def test_cluster_ordering_rejects_inconsistent_lengths():
     with pytest.raises(ValueError, match="same length"):
         order_clusters_by_variance([np.array([0.0])], np.array([0, 1]), [np.array([0.0])])
