@@ -62,6 +62,13 @@ def test_regime_switching_gbm_returns_consistent_shapes():
     assert len(intervals) == 1
 
 
+def test_regime_switching_rejects_invalid_configuration():
+    params = RegimeSwitchingParams(timesteps_per_year=0)
+
+    with np.testing.assert_raises_regex(ValueError, "timesteps_per_year"):
+        generate_regime_switching_gbm(params, GBMParams(0.1, 0.2), GBMParams(-0.1, 0.3))
+
+
 def test_theoretical_moments_scale_with_time_step():
     mean, variance = get_theoretical_moments_gbm(GBMParams(mu=0.1, sigma=0.2), 0.5)
     jump_mean, jump_variance = get_theoretical_moments_merton(

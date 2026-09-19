@@ -51,6 +51,19 @@ class MertonParams:
     delta: float  # Std of log-jump size
 
 
+def _validate_regime_switching_params(params: RegimeSwitchingParams, S0: float) -> None:
+    if params.timesteps_per_year < 1:
+        raise ValueError("timesteps_per_year must be positive")
+    if params.n_years <= 0:
+        raise ValueError("n_years must be positive")
+    if params.n_regime_changes < 0:
+        raise ValueError("n_regime_changes must not be negative")
+    if params.regime_length < 1:
+        raise ValueError("regime_length must be positive")
+    if S0 <= 0:
+        raise ValueError("S0 must be positive")
+
+
 def simulate_gbm(
     S0: float,
     mu: float,
@@ -203,6 +216,7 @@ def generate_regime_switching_gbm(
         - regime_labels: 0 for bull, 1 for bear
         - regime_intervals: List of (start, end) indices for bear regimes
     """
+    _validate_regime_switching_params(params, S0)
     rng = np.random.default_rng(params.random_state)
 
     n_steps = params.timesteps_per_year * params.n_years
@@ -266,6 +280,7 @@ def generate_regime_switching_merton(
     Returns:
         Tuple of (prices, times, regime_labels, regime_intervals)
     """
+    _validate_regime_switching_params(params, S0)
     rng = np.random.default_rng(params.random_state)
 
     n_steps = params.timesteps_per_year * params.n_years
